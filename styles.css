@@ -1,0 +1,58 @@
+body {
+    background-image: linear-gradient(rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.35)), url("background_main.png");
+}
+
+.container {
+    display: inline-block;
+}
+
+h1, h2, h3, h4, h5 {
+    font-family: "Georgia";
+}
+
+.typed-out {
+    font-family: "Georgia";
+    overflow: hidden;
+    white-space: nowrap;
+    animation: typing 4s steps(50, end) forwards;
+    font-size: 1.6rem;
+    width: 0;
+}
+
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+}
+
+
+.green {
+    display: inline;
+    background-color: green;
+    color: white;
+}
+
+.bluetitle {
+    background-color: rgb(25, 25, 255);
+    color: white;
+    display: inline;
+    margin: 0;
+    padding: 0;
+}
+
+.upload_doc {
+    border: 1px solid black;
+    border-radius: 8px;
+    padding: 0;
+    margin: 0;
+    width: 20%;
+}
+
+.column {
+    float: left;
+    width: 50%;
+    padding: 10px;
+}
+
+.hide {
+    display: none !important;
+}

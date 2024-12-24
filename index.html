@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<head>
+    <title>SuperSummary - your AI-powered Assistant to work smarter, not harder!</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <script>
+        function submitForm(event) {
+            event.preventDefault();
+            var form = document.getElementById('uploadForm');
+            var formData = new FormData(form);
+
+            var resultDiv = document.getElementById('result');
+            document.getElementById('summary1').classList.remove('hide');
+            resultDiv.innerText = 'Processing... Please wait. This can take a minute or two, depending on the complexity of the document.';
+            document.getElementById('how-to-use').classList.add('hide');
+
+            fetch('/summarize.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(data => {
+                if (data.trim()) {
+                    resultDiv.innerText = data;
+                    document.getElementById('copy').classList.remove('hide');
+                } else {
+                    resultDiv.innerText = 'No summary available. Please check the file or try again.';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                resultDiv.innerText = 'An error occurred while processing your request. Please try again later.';
+            });
+        }
+        
+        function copyToClipboard() {
+            var copyText = document.getElementById('result').innerText;
+            if (copyText.trim() === '') {
+                alert('No summary to copy!');
+                return;
+            }
+            navigator.clipboard.writeText(copyText)
+                .then(() => {
+                    alert('Copied Summary to clipboard!');
+                })
+                .catch(err => {
+                    console.error('Error:', err);
+                    alert('Failed to copy Summary to clipboard!');
+                });
+        }
+    </script>
+    <center>
+        <br>
+        <div class="container"><div class="typed-out"><h2><p class="green">Super</p><p class="bluetitle">Summary</p> - your AI-powered Assistant to work smarter, not harder!</h2></div></div>
+        <br><br>
+    <div style="margin-bottom: 10px;">
+        <form onsubmit="return submitForm(event);" id="uploadForm">
+            <div class="upload_doc">
+                <label for="file">Upload .docx or .pdf File:</label>
+                <input type="file" name="file" id="selectedFile" accept=".docx,.pdf" required style="display: none;"><br><br>
+                <button type="button" onclick="document.getElementById('selectedFile').click();" style="border-radius: 10px !important;" class="btn btn-light browse1">Browse...</button>
+                <br><br>
+                <p id="selected" class="selected"></p>
+            </div>
+            <br><br>
+            <label for="length">Summary Length:</label>
+            <select name="length" id="length">
+                <option value="Short">Short (up to 100 words)</option>
+                <option value="Medium">Medium (up to 125 words)</option>
+                <option value="Long">Long (up to 150 words)</option>
+            </select><br><br>
+            <button type="submit" class="btn btn-primary">Summarise!</button>
+        </form>
+    </div>
+        <div id="summary1" style="backdrop-filter: blur(6px); font-size: 20px; border: 1px solid gray; width: 90%; border-radius: 10px;" class="hide">
+            <u><h2>Summary</h2></u>
+            <br>
+            <div id="typed"><p id="result" class="result"></p></div>
+            <br>
+            <p style="font-size: 10px;">Warning: AI-generated content may be inaccurate, biased, or unsuitable for specific contexts. It may occasionally produce responses that are irrelevant, inappropriate, or unrelated to the input, and could include content on sensitive topics without context. Always verify the information and use discretion before relying on or sharing AI outputs.</p>
+            <br>
+            <button type="button" id="copy" class="btn btn-light hide" onclick="copyToClipboard();">Copy Summary</button>
+            &nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-light hide" onclick="window.location = '#';">Restart</button>
+        </div>
+        <div id="how-to-use" class="use" style="padding-left: 15px; backdrop-filter: blur(6px); border: 1px solid gray; width: 90%; border-radius: 10px; text-align: left;">
+            <u><h2>How to use SuperSummary?</h2></u>
+            <p>SuperSummary is an AI-powered assistant that helps you summarize your documents quickly and efficiently. To use SuperSummary, follow these simple steps:</p>
+            <ol>
+                <li>Upload your document in .docx or .pdf format. (Word Limit: 650 Words)</li>
+                <li>Select the desired length of the summary (Short, Medium, Long, or Very Long).</li>
+                <li>Click on the "Summarise!" button to generate the summary.</li>
+                <li>Copy the summary to your clipboard by clicking on the "Copy Summary" button.</li>
+            </ol>
+            <p>SuperSummary will process your document and provide you with a concise summary based on the selected length. It's a great tool for students, researchers, and professionals who need to quickly extract key information from lengthy documents.</p>
+            <p>Try SuperSummary today and work smarter, not harder!</p>
+            <p style="font-size: 10px;">Warning: AI-generated content may be inaccurate, biased, or unsuitable for specific contexts. It may occasionally produce responses that are irrelevant, inappropriate, or unrelated to the input, and could include content on sensitive topics without context. Always verify the information and use discretion before relying on or sharing AI outputs.</p>
+        </div>
+    </center>
+    <script src="script.js"></script>
+</body>
+</html>
